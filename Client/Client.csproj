@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ClubActivity\ClubActivity.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="MyProgram.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>

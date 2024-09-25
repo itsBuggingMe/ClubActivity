@@ -1,15 +1,41 @@
-﻿namespace ClubActivity;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Extensions.Logging;
+using ClubActivity;
 
-class Program
+var game = new GameRoot();
+game.Run();
+
+internal class GameRoot : Game
 {
-    public static void Main()
+    private GraphicsDeviceManager graphics;
+    private SpriteBatch spriteBatch = null!;
+    private ILogger _logger;
+    private IConnection _connection;
+
+    public GameRoot() : base()
     {
-        Server.Instance.Run();
-        while(true)
-        {
-            if(Server.Instance.Messages.TryDequeue(out string? s))
-                Console.WriteLine(s);
-            Thread.Sleep(100);
-        }
+        graphics = new GraphicsDeviceManager(this);
+        Content.RootDirectory = "Content";
+        IsMouseVisible = true;
+    }
+
+    protected override void Initialize()
+    {
+        base.Initialize();
+        spriteBatch = new SpriteBatch(GraphicsDevice);
+
+        _connection = new Pantry();
+        _connection.Host();
+    }
+
+    protected override void Update(GameTime gameTime)
+    {
+    }
+
+    protected override void Draw(GameTime gameTime)
+    {
+        spriteBatch.Begin();
+        spriteBatch.End();
     }
 }
