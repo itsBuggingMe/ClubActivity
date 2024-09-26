@@ -37,19 +37,125 @@ class Program
 
         _connection = new Pantry("cs_club_p");
         _connection.Host();
-        Task.Run(() => { Console.ReadLine(); _break = true; });
+        Task.Run(() => { Thread.Sleep(1000); Console.ReadLine(); _break = true; });
         while(!_break)
         {
             UpdatePartcipants();
             Thread.Sleep(100);
         }
 
-        foreach(var item in _participants)
+        RunGame();
+    }
+
+    static void RunGame()
+    {
+        List<Player> entries = _participants.Select(t => new Player(t)).ToList();
+        Player[] array = entries.ToArray();
+        Round[][] arrPoolLeft = Enumerable.Range(0, 25).Select(i => new Round[i]).ToArray();
+        Round[][] arrPoolRight = Enumerable.Range(0, 25).Select(i => new Round[i]).ToArray();
+
+        int round = 1;
+        while(true)
         {
-            Choice c = item.Function.Choose(new Round[] { });
+            round++;
+
+            for(int i = 0; i < entries.Count; i++)
+            {
+                for(int j = i + 1; j < entries.Count; j++)
+                {
+                    var left = entries[i];
+                    var right = entries[j];
+                    Round[] arrL = arrPoolLeft[0];
+                    Round[] arrR = arrPoolRight[0];
+
+                    for(int r = 0; r < 10 || (Random.Shared.Next(10) < 5); r++)
+                    {
+                        Choice leftChoice = (Choice)left.Entry.Function.Choose(arrL);
+                        Choice rightChoice = (Choice)right.Entry.Function.Choose(arrR);
+                        Console.WriteLine($"{r}: {left.Entry.Name} vs {right.Entry.Name}");
+
+                        Resize(ref arrL, new Round(leftChoice, rightChoice), arrPoolLeft);
+                        Resize(ref arrR, new Round(rightChoice, leftChoice), arrPoolRight);
+
+                        var (x, y) = (leftChoice, rightChoice) switch
+                        {
+                            (Choice.Cooperate, Choice.Cheat) => (0, 3),
+                            (Choice.Cheat, Choice.Cooperate) => (3, 0),
+                            (Choice.Cheat, Choice.Cheat) => (1, 1),
+                            (Choice.Cooperate, Choice.Cooperate) => (2, 2),
+                            _ => (0, 0)
+                        };
+                        left.Score += x;
+                        right.Score += y;
+
+                        if (r >= 20)
+                            break;
+
+                        static void Resize(ref Round[] toResize, Round newElement, Round[][] pool)
+                        {
+                            var newArr = pool[toResize.Length + 1];
+
+                            for(int i = 0; i < toResize.Length; i++)
+                            {
+                                newArr[i] = toResize[i];
+                            }
+
+                            toResize = newArr;
+                            toResize[^1] = newElement;
+                        }
+                    }
+                }
+            }
+
+            Array.Sort(array, (a, b) => b.Score.CompareTo(a.Score));
+
+            double aggregate = 0;
+            Dictionary<string, int> scores = new Dictionary<string, int>();
+            foreach (var player in array)
+            {
+                aggregate += player.Score;
+                if(scores.ContainsKey(player.Entry.Name))
+                {
+                    scores[player.Entry.Name]++;
+                }
+                else
+                {
+                    scores[player.Entry.Name] = 0;
+                }
+            }
+
+            int counter = 1;
+            Console.Clear();
+            foreach(var score in scores.OrderByDescending(kvp => kvp.Value))
+            {
+                Console.WriteLine($"#{counter++}. {score.Key}: {score.Value}");
+            }
+            Thread.Sleep(1000);
+            const double Total = 100;
+            List<Player> newPlayers = new List<Player>();
+            foreach (var player in array)
+            {
+                int estimatedCount = (int)Math.Round(player.Score / aggregate * Total);
+                for(int i = 0; i < estimatedCount; i++)
+                {
+                    newPlayers.Add(new Player(player.Entry));
+                }
+            }
+            array = newPlayers.ToArray();
+            entries = newPlayers;
         }
     }
 
+    internal class Player
+    {
+        public readonly Entry Entry;
+        public int Score;
+
+        public Player(Entry entry)
+        {
+            Entry = entry;
+        }
+    }
 
     static void UpdatePartcipants()
     {
@@ -116,12 +222,13 @@ class Program
 
         public Choice Choose(Round[] previousRounds)
         {
-
             var pythonRounds = previousRounds
                 .Select(r => new { self = r.YourChoice.ToString(), other = r.OpponentChoice.ToString() })
                 .ToList();
 
             var result = func(pythonRounds);
+
+
 
             if (result.ToString().Equals("Cooperate", StringComparison.OrdinalIgnoreCase))
             {
