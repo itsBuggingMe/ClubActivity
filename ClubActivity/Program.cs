@@ -93,10 +93,10 @@ class Program
 
                         var (x, y) = (leftChoice, rightChoice) switch
                         {
-                            (Choice.Cooperate, Choice.Cheat) => (0, 3),
-                            (Choice.Cheat, Choice.Cooperate) => (3, 0),
+                            (Choice.Cooperate, Choice.Cheat) => (0, 5),
+                            (Choice.Cheat, Choice.Cooperate) => (5, 0),
                             (Choice.Cheat, Choice.Cheat) => (1, 1),
-                            (Choice.Cooperate, Choice.Cooperate) => (2, 2),
+                            (Choice.Cooperate, Choice.Cooperate) => (3, 3),
                             _ => (0, 0)
                         };
                         left.Score += x;
