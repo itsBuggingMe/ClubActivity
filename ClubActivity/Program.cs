@@ -35,7 +35,7 @@ class Program
 
         _compiler = new RoslynCompiler(AllowedNamespaces, AllowedAssemblies);
 
-        _connection = new Pantry("cs_club_p");
+        _connection = new Pantry("cs_club_pm");
         _connection.Host();
         Task.Run(() => { Thread.Sleep(1000); Console.ReadLine(); _break = true; });
         while(!_break)
