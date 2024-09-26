@@ -23,7 +23,7 @@ public partial class MainViewModel : ObservableObject
         SelectedLanguage = Languages[0];
         var files = Directory.EnumerateFiles(FilePath);
         _code = File.ReadAllText(files.First(f => f.EndsWith(".cs")));
-        _connection = new Pantry("cs_club_p");
+        _connection = new Pantry("cs_club_p1");
         _connection.Connect();
     }
 
