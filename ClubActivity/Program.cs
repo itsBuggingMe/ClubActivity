@@ -70,9 +70,23 @@ class Program
 
                     for(int r = 0; r < 10 || (Random.Shared.Next(10) < 5); r++)
                     {
-                        Choice leftChoice = (Choice)left.Entry.Function.Choose(arrL);
-                        Choice rightChoice = (Choice)right.Entry.Function.Choose(arrR);
-                        Console.WriteLine($"{r}: {left.Entry.Name} vs {right.Entry.Name}");
+                        Choice leftChoice;
+                        try
+                        { leftChoice = (Choice)left.Entry.Function.Choose(arrL); }
+                        catch
+                        {
+                            left.Score = 0;
+                            leftChoice = Choice.Cheat;
+                        }
+                        Choice rightChoice;
+                        try
+                        { rightChoice = (Choice)right.Entry.Function.Choose(arrR); }
+                        catch
+                        {
+                            right.Score = 0;
+                            rightChoice = Choice.Cheat;
+                        }
+                        //Console.WriteLine($"{r}: {left.Entry.Name} vs {right.Entry.Name}");
 
                         Resize(ref arrL, new Round(leftChoice, rightChoice), arrPoolLeft);
                         Resize(ref arrR, new Round(rightChoice, leftChoice), arrPoolRight);
