@@ -1,6 +1,6 @@
 ﻿namespace ClubActivity;
 
-internal interface IConnection
+public interface IConnection
 {
     public void Host();
     public void Connect();

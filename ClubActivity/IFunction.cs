@@ -8,6 +8,6 @@ namespace ClubActivity
 {
     public interface IFunction
     {
-        dynamic Accept(dynamic input);
+        Choice Accept(Round[] rounds);
     }
 }
