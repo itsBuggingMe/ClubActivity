@@ -5,8 +5,8 @@ namespace Client;
 
 internal class MyProgram
 {
-    public Choice Choose(Round[] rounds)
+    public Choice Choose(Round third, Round second, Round last, int totalRoundCount)
     {
-        return Choice.Cheat;
+        return Choice.Cooperate;
     }
 }

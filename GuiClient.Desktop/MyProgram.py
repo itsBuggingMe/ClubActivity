@@ -1,7 +1,5 @@
-﻿def Choose(previousRounds):
-    if len(previousRounds) == 0:
-        return "Cooperate"
-    if previousRounds[-1] == "Cheat":
-        return "Cooperate"
-    else
-        return "Cheat"
+﻿cheat = "Cheat"
+cooperate = "Cooperate"
+
+def Choose(third, second, last, total_count):
+    return "Cooperate";

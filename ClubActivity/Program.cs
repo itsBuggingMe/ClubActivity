@@ -35,7 +35,7 @@ class Program
 
         _compiler = new RoslynCompiler(AllowedNamespaces, AllowedAssemblies);
 
-        _connection = new Pantry("cs_club_pm");
+        _connection = new Pantry("cs_club_pm_2");
         _connection.Host();
         Task.Run(() => { Thread.Sleep(1000); Console.ReadLine(); _break = true; });
         while(!_break)
@@ -216,7 +216,8 @@ class Program
 
         public Choice Choose(Round[] previousRounds)
         {
-            return (Choice)_method.Invoke(o, new object[] { previousRounds });
+            var item = LastThree(previousRounds);
+            return (Choice)_method.Invoke(o, new object[] { item.Item1, item.Item2, item.Item3 });
         }
     }
 
@@ -236,9 +237,7 @@ class Program
 
         public Choice Choose(Round[] previousRounds)
         {
-            var pythonRounds = previousRounds
-                .Select(r => new { self = r.YourChoice.ToString(), other = r.OpponentChoice.ToString() })
-                .ToList();
+            var result = func(r.Item1.ToString(), r.Item2.ToString(), r.Item3.ToString());
 
             var result = func(pythonRounds);
 
@@ -256,5 +255,14 @@ class Program
         }
     }
 
+
+    public static (Round, Round, Round) LastThree(Round[] rounds)
+    {
+        int count = rounds.Length;
+        Round thirdLast = count >= 3 ? rounds[count - 3] : default;
+        Round secondLast = count >= 2 ? rounds[count - 2] : default;
+        Round last = count >= 1 ? rounds[count - 1] : default;
+        return (thirdLast, secondLast, last);
+    }
 }
 internal record class Entry(string Name, string Extension, dynamic Function);

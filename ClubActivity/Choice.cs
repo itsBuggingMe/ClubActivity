@@ -2,8 +2,8 @@
 
 public enum Choice
 {
+    Cooperate,
     Cheat,
-    Cooperate
 }
 
 public record struct Round(Choice YourChoice, Choice OpponentChoice);
