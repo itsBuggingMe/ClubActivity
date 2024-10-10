@@ -217,7 +217,7 @@ class Program
         public Choice Choose(Round[] previousRounds)
         {
             var item = LastThree(previousRounds);
-            return (Choice)_method.Invoke(o, new object[] { item.Item1, item.Item2, item.Item3 });
+            return (Choice)_method.Invoke(o, new object[] { item.Item1, item.Item2, item.Item3, previousRounds.Length });
         }
     }
 
@@ -237,10 +237,9 @@ class Program
 
         public Choice Choose(Round[] previousRounds)
         {
-            var result = func(r.Item1.ToString(), r.Item2.ToString(), r.Item3.ToString());
+            var r = LastThree(previousRounds);
 
-            var result = func(pythonRounds);
-
+            var result = func(r.Item1.ToString(), r.Item2.ToString(), r.Item3.ToString(), previousRounds.Length);
 
 
             if (result.ToString().Equals("Cooperate", StringComparison.OrdinalIgnoreCase))
