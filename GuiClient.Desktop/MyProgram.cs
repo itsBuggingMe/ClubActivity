@@ -7,6 +7,6 @@ internal class MyProgram
 {
     public Choice Choose(Round third, Round second, Round last, int totalRoundCount)
     {
-        return Choice.Cooperate;
+        return last.OpponentChoice;
     }
 }
